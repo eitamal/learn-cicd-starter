@@ -1,5 +1,5 @@
 name: ci
-on:
+"on":
   pull_request:
     branches: [main]
 jobs:
@@ -13,5 +13,5 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: "1.24.2"
-      - name: Force Failure
-        run: (exit 1)
+      - name: Show Go Version
+        run: (go version)
