@@ -33,5 +33,13 @@ jobs:
         run: test -z $(go fmt ./...)
       - name: Run staticcheck
         run: staticcheck ./...
+  gosec:
+    name: Gosec Security Scanner
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
       - name: Run gosec
-        run: gosec ./...
+        uses: securego/gosec@master
+        with:
+          args: ./...
