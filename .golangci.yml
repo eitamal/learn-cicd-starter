@@ -1,4 +1,9 @@
 version: "2"
+linters:
+  exclusions:
+    warn-unused: true
+    presets:
+      - std-error-handling
 formatters:
   enable:
     - gci
