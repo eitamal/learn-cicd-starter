@@ -1,7 +1,10 @@
-FROM --platform=linux/amd64 debian:stable-slim
+FROM golang:alpine AS build
 
-RUN apt-get update && apt-get install -y ca-certificates
+WORKDIR /build
+COPY . .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o notely
 
-ADD notely /usr/bin/notely
-
-CMD ["notely"]
+FROM scratch
+COPY --from=build /build/notely /notely
+# RUN apk add ca-certificates
+ENTRYPOINT ["/notely"]
