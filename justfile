@@ -5,6 +5,8 @@ alias yl := yml_lint
 alias df := deno_fmt
 alias gf := go_fmt
 alias gl := go_lint
+alias gsu := goose_up
+alias gsd := goose_down
 alias jf := just_fmt
 
 _default: fmt lint
@@ -35,6 +37,12 @@ go_fmt:
 
 go_lint:
     golangci-lint run
+
+goose_up:
+    goose up
+
+goose_down:
+    goose down
 
 just_fmt:
     just --fmt
