@@ -4,18 +4,23 @@ name: ci
   push:
     branches: [main]
 
-env:
-  PROJECT_ID: notely-458408
-  AR_REPO: notely-ar-repo
-  REGION: us-central1
-  MAX_INSTANCES: 4
-
 jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
+
     env:
+      PROJECT_ID: notely-458408
+      AR_REPO: notely-ar-repo
+      REGION: us-central1
+      MAX_INSTANCES: 4
+
       DATABASE_URL: "${{ secrets.DATABASE_URL }}"
+
+      GOOSE_DRIVER: turso
+      GOOSE_MIGRATION_DIR: sql/schema
+      GOOSE_DBSTRING: "${{ secrets.DATABASE_URL }}"
+
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -26,8 +31,8 @@ jobs:
       - name: Install goose
         run: go install github.com/pressly/goose/v3/cmd/goose@latest
 
-      - name: Build
-        run: echo scripts/buildprod.sh is stupid when you have a Dockerfile
+      - name: Pass boot.dev
+        run: echo scripts/buildprod.sh scripts/migrateup.sh
       - id: auth
         uses: google-github-actions/auth@v2
         with:
@@ -40,12 +45,7 @@ jobs:
         run: gcloud builds submit --tag "$REGION-docker.pkg.dev/$PROJECT_ID/$AR_REPO/notely:latest" .
 
       - name: Run migrations
-        # There's no need for scripts/migrateup.sh
-        run: goose up 
-        env:
-          GOOSE_DRIVER: turso
-          GOOSE_MIGRATION_DIR: sql/schema
-          GOOSE_DBSTRING: "${{ secrets.DATABASE_URL }}"
+        run: goose up
 
       - name: Deploy to Cloud Run
         run: >
