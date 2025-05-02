@@ -8,6 +8,7 @@ alias gl := go_lint
 alias gsu := goose_up
 alias gsd := goose_down
 alias jf := just_fmt
+alias dkl := docker_lint
 
 _default: fmt lint
 
@@ -22,6 +23,7 @@ lint:
     #!/usr/bin/env -S parallel --shebang --ungroup --jobs {{ num_cpus() }}
     just yml_lint
     just go_lint
+    just docker_lint
 
 yml_fmt:
     yamlfmt
@@ -46,3 +48,6 @@ goose_down:
 
 just_fmt:
     just --fmt
+
+docker_lint:
+    hadolint Dockerfile
