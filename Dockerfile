@@ -1,6 +1,6 @@
 FROM golang:alpine AS build
 
-RUN apk add --no-cache ca-certificates=20241121-r2
+RUN apk add --no-cache ca-certificates=20241121-r1
 
 WORKDIR /build
 COPY . .
